@@ -8,6 +8,19 @@
 #define led6 8
 #define buzzer 3
 
+#include "pitches.h"
+
+// notes in the melody:
+int melody[] = {
+  NOTE_C7, NOTE_C7, NOTE_C7, NOTE_C7, NOTE_D7, NOTE_C7, NOTE_D7, NOTE_E7
+};
+
+// note durations: 4 = quarter note, 8 = eighth note, etc.:
+int noteDurations[] = {
+  4, 8, 8, 4, 4, 4, 4, 2
+};
+
+
 
 void setup() {
   Serial.begin (9600);
@@ -36,42 +49,54 @@ void loop() {
 
   if (distance <= 30) {
     digitalWrite(led, HIGH);
-    sound = 250;
 }
   else {
     digitalWrite(led,LOW);
   }
   if (distance < 25) {
       digitalWrite(led2, HIGH);
-      sound = 260;
 }
   else {
       digitalWrite(led2, LOW);
   }
   if (distance < 20) {
       digitalWrite(led3, HIGH);
-      sound = 270;
 } 
   else {
     digitalWrite(led3, LOW);
   }
   if (distance < 15) {
     digitalWrite(led4, HIGH);
-    sound = 280;
 }
   else {
     digitalWrite(led4,LOW);
   }
   if (distance < 10) {
     digitalWrite(led5, HIGH);
-    sound = 290;
 }
   else {
     digitalWrite(led5,LOW);
   }
   if (distance < 5) {
     digitalWrite(led6, HIGH);
-    sound = 300;
+    
+       //VICTORY MELODY
+     // iterate over the notes of the melody:
+  for (int thisNote = 0; thisNote < 8; thisNote++) {
+
+    // to calculate the note duration, take one second divided by the note type.
+    //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
+    int noteDuration = 1000 / noteDurations[thisNote];
+    tone(3, melody[thisNote], noteDuration);
+
+    // to distinguish the notes, set a minimum time between them.
+    // the note's duration + 30% seems to work well:
+    int pauseBetweenNotes = noteDuration * 1.30;
+    delay(pauseBetweenNotes);
+    // stop the tone playing:
+    noTone(3);
+  }
+    
 }
   else {
     digitalWrite(led6,LOW);
